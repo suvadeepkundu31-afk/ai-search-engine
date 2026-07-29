@@ -43,6 +43,9 @@ services:
       EMBEDDING_MODEL: ${EMBEDDING_MODEL:-all-MiniLM-L6-v2}
       OLLAMA_HOST: http://ollama:11434
       OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.1:8b}
+      LLM_PROVIDER: ${LLM_PROVIDER:-ollama}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-1.5-flash}
       FAISS_INDEX_PATH: /app/data/faiss.index
       UPLOAD_DIR: /app/data/uploads
       CHUNK_SIZE: ${CHUNK_SIZE:-500}

@@ -119,6 +119,9 @@ npm run dev
 | `EMBEDDING_MODEL` | `all-MiniLM-L6-v2` | Local sentence-transformer model |
 | `OLLAMA_HOST` | `http://localhost:11434` | Ollama API base URL |
 | `OLLAMA_MODEL` | `llama3.1:8b` | Ollama chat model |
+| `LLM_PROVIDER` | `ollama` | Chat LLM provider (`ollama` or `gemini`) |
+| `GEMINI_API_KEY` | *(none)* | Google Gemini API key |
+| `GEMINI_MODEL` | `gemini-3.5-flash` | Gemini model name |
 | `FAISS_INDEX_PATH` | `./data/faiss.index` | Path to persisted FAISS index |
 | `UPLOAD_DIR` | `./data/uploads` | Uploaded file storage |
 | `CHUNK_SIZE` | `500` | Words per chunk |
