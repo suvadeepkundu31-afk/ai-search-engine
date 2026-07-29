@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: zeee-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: zeee-postgres
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: OLLAMA_HOST
+        sync: false
+      - key: OLLAMA_MODEL
+        value: llama3.1:8b
+    healthCheckPath: /health
+
+  - type: web
+    name: zeee-ollama
+    runtime: docker
+    dockerfilePath: ./ollama/Dockerfile
+    envVars:
+      - key: OLLAMA_KEEP_ALIVE
+        value: 24h
+    # Ollama must be reachable from the backend (private service recommended).
+
+  - type: static
+    name: zeee-frontend
+    buildCommand: cd frontend && npm install && npm run build
+    publishDir: frontend/dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        sync: false
+        # Set this to your backend URL, e.g. https://zeee-backend.onrender.com
+
+databases:
+  - name: zeee-postgres
+    databaseName: zeee
+    user: zeee

@@ -76,7 +76,15 @@ def fake_llm():
 
 
 @pytest.fixture
-def client(fake_vector_store, fake_embedding_engine, fake_llm):
+def fake_llm_stream():
+    def _stream(messages, **kwargs):
+        for token in ["Test", " answer", " based", " on", " context", "."]:
+            yield token
+    return _stream
+
+
+@pytest.fixture
+def client(fake_vector_store, fake_embedding_engine, fake_llm, fake_llm_stream):
     Base.metadata.create_all(bind=engine)
 
     def override_get_db():
@@ -89,6 +97,7 @@ def client(fake_vector_store, fake_embedding_engine, fake_llm):
     embedding_engine.embed = fake_embedding_engine.embed
     embedding_engine.dim = fake_embedding_engine.dimension
     llm.chat = fake_llm
+    llm.chat_stream = fake_llm_stream
 
     app.dependency_overrides[get_db] = override_get_db
     app.dependency_overrides[get_vector_store] = lambda: fake_vector_store
