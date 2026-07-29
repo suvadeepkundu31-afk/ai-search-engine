@@ -15,6 +15,7 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     documents = relationship("Document", back_populates="owner")
+    chat_sessions = relationship("ChatSession", back_populates="owner")
 
 
 class Document(Base):
@@ -24,9 +25,10 @@ class Document(Base):
     filename = Column(String)
     content_type = Column(String)
     user_id = Column(Integer, ForeignKey("users.id"))
-    status = Column(String, default="processing")  # processing, ready, error
+    status = Column(String, default="processing")
     error_message = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
 
     owner = relationship("User", back_populates="documents")
     chunks = relationship("Chunk", back_populates="document", cascade="all, delete-orphan")
@@ -51,6 +53,10 @@ class ChatSession(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     title = Column(String)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+
+    owner = relationship("User", back_populates="chat_sessions")
+    messages = relationship("ChatMessage", back_populates="session", order_by="ChatMessage.created_at")
 
 
 class ChatMessage(Base):
@@ -62,3 +68,5 @@ class ChatMessage(Base):
     content = Column(Text)
     sources = Column(JSON, nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+    session = relationship("ChatSession", back_populates="messages")

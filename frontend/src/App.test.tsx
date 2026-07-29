@@ -13,6 +13,6 @@ vi.mock("./auth/AuthContext", async () => {
 describe("App", () => {
   test("renders the login page when not authenticated", () => {
     render(<App />);
-    expect(screen.getByRole("heading", { name: /login/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /sign in/i })).toBeInTheDocument();
   });
 });

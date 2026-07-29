@@ -53,3 +53,22 @@ class ChatResponse(BaseModel):
     answer: str
     sources: List[Source]
     session_id: int
+
+
+class ChatSessionOut(BaseModel):
+    id: int
+    title: str
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class ChatMessageOut(BaseModel):
+    id: int
+    role: str
+    content: str
+    sources: Optional[List[dict]] = None
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)

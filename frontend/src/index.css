@@ -1,126 +1,101 @@
-:root {
-  --bg: #f7f9fb;
-  --card: #ffffff;
-  --primary: #2563eb;
-  --primary-dark: #1d4ed8;
-  --text: #1f2937;
-  --muted: #6b7280;
-  --border: #e5e7eb;
-  --danger: #ef4444;
-  --success: #10b981;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply antialiased scroll-smooth;
+  }
+  html.dark,
+  html {
+    @apply bg-slate-950 text-slate-100;
+  }
+  body {
+    @apply font-sans min-h-screen overflow-x-hidden;
+    background: radial-gradient(ellipse at top, #0f172a 0%, #020617 50%, #000000 100%);
+    color: #e2e8f0;
+  }
+  input, textarea, button, select {
+    @apply outline-none;
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(56, 189, 248, 0.4) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-sky-500/30;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-sky-400/50;
+  }
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background: var(--bg);
-  color: var(--text);
+@layer components {
+  .glass {
+    @apply bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] shadow-2xl shadow-cyan-900/10 rounded-2xl;
+  }
+  .glass-strong {
+    @apply bg-white/[0.08] backdrop-blur-2xl border border-white/[0.12] shadow-2xl shadow-cyan-900/20 rounded-2xl;
+  }
+  .glow {
+    box-shadow: 0 0 40px -10px rgba(6, 182, 212, 0.25), 0 0 80px -20px rgba(168, 85, 247, 0.15);
+  }
+  .glow-sm {
+    box-shadow: 0 0 20px -5px rgba(6, 182, 212, 0.25);
+  }
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-sky-500 to-purple-500;
+  }
+  .gradient-border {
+    position: relative;
+    background-clip: padding-box;
+  }
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(6,182,212,0.6), rgba(168,85,247,0.6), rgba(6,182,212,0.3));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  .btn-primary {
+    @apply px-5 py-2.5 rounded-xl font-medium text-white bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 transition-all duration-200 shadow-lg shadow-cyan-500/25 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-ghost {
+    @apply px-4 py-2 rounded-xl font-medium text-slate-200 hover:bg-white/10 transition-colors;
+  }
+  .input-field {
+    @apply w-full bg-white/[0.05] border border-white/[0.10] rounded-xl px-4 py-3 text-slate-100 placeholder:text-slate-500 focus:border-cyan-500/50 focus:bg-white/[0.07] transition-all;
+  }
+  .prose-zeee {
+    @apply prose prose-invert prose-sm max-w-none;
+  }
+  .prose-zeee pre {
+    @apply rounded-xl border border-white/10 bg-slate-950/60 p-4 overflow-auto;
+  }
+  .prose-zeee code {
+    @apply rounded-md bg-white/10 px-1.5 py-0.5 text-cyan-300 before:content-none after:content-none;
+  }
+  .prose-zeee pre code {
+    @apply bg-transparent p-0 text-slate-200;
+  }
 }
 
-a { color: var(--primary); text-decoration: none; }
-a:hover { text-decoration: underline; }
-
-.navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--card);
-  border-bottom: 1px solid var(--border);
-  padding: 0.75rem 1.5rem;
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
 }
-
-.brand { font-weight: 700; font-size: 1.25rem; }
-
-.nav-links { display: flex; gap: 1.5rem; }
-
-.nav-user { display: flex; align-items: center; gap: 0.75rem; }
-
-.page { padding: 2rem; max-width: 900px; margin: 0 auto; }
-
-.auth-container {
-  max-width: 360px;
-  margin: 5rem auto;
-  padding: 2rem;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-}
-
-.auth-container h2 { margin-bottom: 1rem; }
-
-.auth-container form,
-.search-form,
-.chat-input,
-.upload form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-input, button, select {
-  padding: 0.6rem 0.75rem;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  font-size: 1rem;
-}
-
-button {
-  background: var(--primary);
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-button:hover { background: var(--primary-dark); }
-
-button:disabled { background: var(--muted); cursor: not-allowed; }
-
-.error { color: var(--danger); margin-top: 0.5rem; }
-.success { color: var(--success); margin-top: 0.5rem; }
-
-.search-form { flex-direction: row; }
-.search-form input { flex: 1; }
-
-.results { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
-
-.result-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 1rem;
-}
-
-.result-card h4 { margin-bottom: 0.5rem; }
-.result-card .score { color: var(--muted); font-weight: 400; }
-
-.chat-window {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  min-height: 300px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.message p { margin-top: 0.25rem; }
-.message.user { align-self: flex-end; }
-.message.assistant { align-self: flex-start; }
-
-.chat-input { flex-direction: row; }
-.chat-input input { flex: 1; }
-
-.doc-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-  background: var(--card);
-  border: 1px solid var(--border);
-}
-
-.doc-table th, .doc-table td { text-align: left; padding: 0.75rem; border-bottom: 1px solid var(--border); }
-
-.center { text-align: center; padding: 3rem; }

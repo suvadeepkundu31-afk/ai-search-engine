@@ -27,6 +27,21 @@ export interface Source {
 
 export interface SearchResult extends Source {}
 
+export interface ChatSession {
+  id: number;
+  title: string;
+  created_at: string;
+  updated_at?: string;
+}
+
+export interface ChatMessage {
+  id: number;
+  role: "user" | "assistant";
+  content: string;
+  sources?: Source[];
+  created_at: string;
+}
+
 export interface ChatRequest {
   query: string;
   session_id?: number;
