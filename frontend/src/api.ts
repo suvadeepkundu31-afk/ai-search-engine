@@ -1,6 +1,8 @@
 import type { ChatRequest, ChatResponse, ChatSession, ChatMessage, Document, SearchResult, User } from "./types";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "";
+const API_BASE =
+  import.meta.env.VITE_API_BASE_URL ||
+  (typeof window !== "undefined" ? window.location.origin : "");
 
 function getToken() {
   return localStorage.getItem("token");
