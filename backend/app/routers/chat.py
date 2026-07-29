@@ -15,8 +15,9 @@ import json
 router = APIRouter(prefix="/api/chat", tags=["chat"])
 
 SYSTEM_PROMPT = (
-    "You are Zeee, a helpful research assistant. Answer the user's question using only the provided context. "
-    "If the context does not contain the answer, say so. Cite the source documents in your answer."
+    "You are Zeee, a helpful general assistant. You may use the provided source context to answer, "
+    "and you should cite it when you do. If no useful context is provided, answer the question directly "
+    "from your own general knowledge without mentioning the lack of context."
 )
 
 
@@ -40,10 +41,11 @@ def _build_messages(history: list[ChatMessage], query: str, context_str: str) ->
     messages = [{"role": "system", "content": SYSTEM_PROMPT}]
     for msg in history:
         messages.append({"role": msg.role, "content": msg.content})
-    messages.append({
-        "role": "user",
-        "content": f"Context:\n{context_str}\n\nQuestion: {query}",
-    })
+    if context_str:
+        content = f"Context:\n{context_str}\n\nQuestion: {query}"
+    else:
+        content = query
+    messages.append({"role": "user", "content": content})
     return messages
 
 
@@ -71,8 +73,9 @@ def chat(
     history = db.query(ChatMessage).filter(ChatMessage.session_id == session.id).order_by(ChatMessage.created_at).all()
 
     results = retrieve(request.query, current.id, db, vector_store, settings.TOP_K)
+    results = [r for r in results if r["score"] >= settings.RELEVANCE_THRESHOLD]
     context_blocks = [f"[Source: {r['filename']}]\n{r['text']}" for r in results]
-    context_str = "\n---\n".join(context_blocks) if context_blocks else "No relevant context found."
+    context_str = "\n---\n".join(context_blocks) if context_blocks else ""
     sources = _sources_from_results(results)
 
     messages = _build_messages(history, request.query, context_str)
@@ -105,8 +108,9 @@ def chat_stream(
     history = db.query(ChatMessage).filter(ChatMessage.session_id == session.id).order_by(ChatMessage.created_at).all()
 
     results = retrieve(request.query, current.id, db, vector_store, settings.TOP_K)
+    results = [r for r in results if r["score"] >= settings.RELEVANCE_THRESHOLD]
     context_blocks = [f"[Source: {r['filename']}]\n{r['text']}" for r in results]
-    context_str = "\n---\n".join(context_blocks) if context_blocks else "No relevant context found."
+    context_str = "\n---\n".join(context_blocks) if context_blocks else ""
     sources = _sources_from_results(results)
 
     messages = _build_messages(history, request.query, context_str)

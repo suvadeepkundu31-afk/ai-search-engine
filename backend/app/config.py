@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     CHUNK_SIZE: int = 500
     CHUNK_OVERLAP: int = 50
     TOP_K: int = 5
+    RELEVANCE_THRESHOLD: float = 0.25
 
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
 

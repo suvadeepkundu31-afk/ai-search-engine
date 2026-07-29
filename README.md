@@ -124,6 +124,7 @@ npm run dev
 | `CHUNK_SIZE` | `500` | Words per chunk |
 | `CHUNK_OVERLAP` | `50` | Overlapping words between chunks |
 | `TOP_K` | `5` | Number of chunks retrieved |
+| `RELEVANCE_THRESHOLD` | `0.25` | Minimum similarity score for retrieved context to be used |
 | `ACCESS_TOKEN_EXPIRE_MINUTES` | `60` | JWT access token lifetime |
 
 ## API Endpoints
