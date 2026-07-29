@@ -4,9 +4,10 @@ A production-ready semantic search and RAG (Retrieval-Augmented Generation) appl
 
 ## Architecture
 
-- **Backend**: FastAPI, SQLAlchemy + PostgreSQL, FAISS, Sentence Transformers, OpenAI
+- **Backend**: FastAPI, SQLAlchemy + PostgreSQL, FAISS, Sentence Transformers, Ollama
 - **Frontend**: React + TypeScript + Vite
-- **Vector DB**: FAISS (with sentence-transformer embeddings, optional OpenAI embeddings)
+- **Vector DB**: FAISS (with sentence-transformer embeddings)
+- **LLM**: Ollama (default model `llama3.1:8b`)
 - **Auth**: JWT (access tokens)
 - **File Parsing**: PDF (`pypdf`), DOCX (`python-docx`), TXT
 - **Deployment**: Docker Compose
@@ -19,27 +20,40 @@ A production-ready semantic search and RAG (Retrieval-Augmented Generation) appl
 - Semantic search across your documents
 - Conversational RAG chat with citations
 - Persistent vector index and document metadata
-- Containerized backend, frontend, and PostgreSQL
+- Containerized backend, frontend, PostgreSQL, and Ollama
 - Unit tests for backend and frontend
 
 ## Quick Start (Docker Compose)
 
-1. Copy the environment file and add your OpenAI API key:
+1. Copy the environment file and set a strong `SECRET_KEY`:
 
 ```bash
 cp .env.example .env
-# Edit .env and set OPENAI_API_KEY, SECRET_KEY
+# Edit .env and set SECRET_KEY
 ```
 
-2. Build and run:
+2. Build and run (this also starts a local Ollama container):
 
 ```bash
 docker compose up --build
 ```
 
-3. Open `http://localhost:3000` and register an account.
+3. Pull the default model in the Ollama container:
+
+```bash
+docker compose exec ollama ollama pull llama3.1:8b
+```
+
+4. Open `http://localhost:3000` and register an account.
 
 ## Local Development
+
+You need an Ollama server running locally. Install Ollama, then pull the model:
+
+```bash
+ollama pull llama3.1:8b
+ollama serve
+```
 
 ### Backend
 
@@ -66,11 +80,10 @@ npm run dev
 |---|---|---|
 | `DATABASE_URL` | `postgresql+psycopg2://aise:aise@localhost:5432/aise` | SQLAlchemy DB URL |
 | `SECRET_KEY` | `change-me-in-production` | JWT signing key |
-| `OPENAI_API_KEY` | - | Required for LLM chat and OpenAI embeddings |
-| `EMBEDDING_PROVIDER` | `sentence-transformers` | `sentence-transformers` or `openai` |
+| `EMBEDDING_PROVIDER` | `sentence-transformers` | Embedding provider |
 | `EMBEDDING_MODEL` | `all-MiniLM-L6-v2` | Local sentence-transformer model |
-| `OPENAI_EMBEDDING_MODEL` | `text-embedding-3-small` | OpenAI embedding model |
-| `OPENAI_CHAT_MODEL` | `gpt-4o-mini` | OpenAI chat model |
+| `OLLAMA_HOST` | `http://localhost:11434` | Ollama API base URL |
+| `OLLAMA_MODEL` | `llama3.1:8b` | Ollama chat model |
 | `FAISS_INDEX_PATH` | `./data/faiss.index` | Path to persisted FAISS index |
 | `UPLOAD_DIR` | `./data/uploads` | Uploaded file storage |
 | `CHUNK_SIZE` | `500` | Words per chunk |

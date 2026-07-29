@@ -4,13 +4,12 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql+psycopg2://aise:aise@localhost:5432/aise"
     SECRET_KEY: str = "change-me-in-production"
-    OPENAI_API_KEY: str | None = None
 
-    EMBEDDING_PROVIDER: str = "sentence-transformers"  # or "openai"
+    EMBEDDING_PROVIDER: str = "sentence-transformers"
     EMBEDDING_MODEL: str = "all-MiniLM-L6-v2"
-    OPENAI_EMBEDDING_MODEL: str = "text-embedding-3-small"
 
-    OPENAI_CHAT_MODEL: str = "gpt-4o-mini"
+    OLLAMA_HOST: str = "http://localhost:11434"
+    OLLAMA_MODEL: str = "llama3.1:8b"
 
     FAISS_INDEX_PATH: str = "./data/faiss.index"
     UPLOAD_DIR: str = "./data/uploads"

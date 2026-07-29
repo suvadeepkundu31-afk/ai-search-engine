@@ -9,7 +9,6 @@ from app.vector_store import VectorStore
 from app.dependencies import get_vector_store
 from app.llm import llm
 from app.config import settings
-from openai import APIError
 
 router = APIRouter(prefix="/api/chat", tags=["chat"])
 
@@ -67,8 +66,8 @@ def chat(
 
     try:
         answer = llm.chat(messages)
-    except APIError as exc:
-        answer = f"[LLM unavailable: {exc.body.get('message', str(exc)) if getattr(exc, 'body', None) else str(exc)}]"
+    except RuntimeError as exc:
+        answer = f"[LLM unavailable: {exc}]"
 
     db.add(ChatMessage(session_id=session.id, role="user", content=request.query))
     db.add(ChatMessage(
